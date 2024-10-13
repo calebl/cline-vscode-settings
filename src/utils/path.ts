@@ -23,7 +23,10 @@ to ensure correct behavior on all platforms. The toPosixPath and arePathsEqual f
 primarily used for presentation and comparison purposes, not for actual file system operations.
 
 Observations:
-- Macos isn't so flexible with mixed separators, whereas windows can handle both. ("Node.js does automatically handle path separators on Windows, converting forward slashes to backslashes as needed. However, on macOS and other Unix-like systems, the path separator is always a forward slash (/), and backslashes are treated as regular characters.")
+- Macos isn't so flexible with mixed separators, whereas windows can handle both. ("Node.js does
+  automatically handle path separators on Windows, converting forward slashes to backslashes as
+	needed. However, on macOS and other Unix-like systems, the path separator is always a forward
+	slash (/), and backslashes are treated as regular characters.")
 */
 
 function toPosixPath(p: string) {
@@ -70,9 +73,11 @@ export function arePathsEqual(path1?: string, path2?: string): boolean {
 function normalizePath(p: string): string {
 	// normalize resolve ./.. segments, removes duplicate slashes, and standardizes path separators
 	let normalized = path.normalize(p)
+	// Convert all separators to forward slashes
+	normalized = normalized.replace(/\\/g, "/")
 	// however it doesn't remove trailing slashes
 	// remove trailing slash, except for root paths
-	if (normalized.length > 1 && (normalized.endsWith("/") || normalized.endsWith("\\"))) {
+	if (normalized.length > 1 && normalized.endsWith("/")) {
 		normalized = normalized.slice(0, -1)
 	}
 	return normalized
